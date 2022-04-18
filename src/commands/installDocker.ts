@@ -4,9 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { IActionContext } from '@microsoft/vscode-azext-utils';
-import * as vscode from 'vscode';
 import { isMac, isWindows } from '../utils/osUtils';
-import { MacDockerInstaller, WindowsDockerInstaller } from './dockerInstaller';
+import { LinuxDockerInstaller, MacDockerInstaller, WindowsDockerInstaller } from './dockerInstaller';
 
 export async function installDocker(context: IActionContext): Promise<void> {
     if (isWindows()) {
@@ -14,6 +13,6 @@ export async function installDocker(context: IActionContext): Promise<void> {
     } else if (isMac()) {
         await (new MacDockerInstaller()).downloadAndInstallDocker(context);
     } else {
-        await vscode.env.openExternal(vscode.Uri.parse('https://aka.ms/download-docker-linux-vscode'));
+        await (new LinuxDockerInstaller()).downloadAndInstallDocker(context);
     }
 }

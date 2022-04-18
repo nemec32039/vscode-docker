@@ -11,7 +11,7 @@ import { localize } from '../localize';
 import { dockerInstallStatusProvider } from '../utils/DockerInstallStatusProvider';
 import { executeAsTask } from '../utils/executeAsTask';
 import { streamToFile } from '../utils/httpRequest';
-import { getTempFileName, isArm64Mac, isLinux } from '../utils/osUtils';
+import { getTempFileName, isArm64Mac } from '../utils/osUtils';
 import { execAsync } from '../utils/spawnAsync';
 
 export abstract class DockerInstallerBase {
@@ -116,18 +116,30 @@ export class MacDockerInstaller extends DockerInstallerBase {
     }
 }
 
+export class LinuxDockerInstaller extends DockerInstallerBase {
+    protected downloadUrl: string = 'https://aka.ms/download-docker-linuxv2-vscode';
+    protected fileExtension: string = 'deb';
+    protected getInstallCommand(fileName: string): string {
+        return `sudo apt install '${fileName}'`;
+    }
+
+    protected async install(context: IActionContext, fileName: string, cmd: string): Promise<void> {
+        const title = localize('vscode-docker.commands.MacDockerInstaller.terminalTitle', 'Docker Install');
+        const command = this.getInstallCommand(fileName);
+
+        await executeAsTask(context, command, title, { addDockerEnv: false });
+    }
+}
+
 export async function showDockerInstallNotification(): Promise<void> {
-    const installMessage = isLinux() ?
-        localize('vscode-docker.commands.dockerInstaller.installDockerInfo', 'Docker is not installed. Would you like to learn more about installing Docker?') :
+    const installMessage =
         localize('vscode-docker.commands.dockerInstaller.installDocker', 'Docker Desktop is not installed. Would you like to install it?');
 
-    const learnMore = localize('vscode-docker.commands.dockerInstaller.learnMore', 'Learn more');
     const install = localize('vscode-docker.commands.dockerInstaller.install', 'Install');
 
-    const confirmationPrompt: vscode.MessageItem = isLinux() ? { title: learnMore } : { title: install };
+    const confirmationPrompt: vscode.MessageItem = { title: install };
     const response = await vscode.window.showInformationMessage(installMessage, ...[confirmationPrompt]);
     if (response) {
         await vscode.commands.executeCommand('vscode-docker.installDocker');
     }
 }
-
