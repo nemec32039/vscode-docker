@@ -21,6 +21,8 @@ export type DockerListContainerRecord = {
     Status: string;
 };
 
+export const DockerListContainerRecordFormat = `{"CreatedAt":{{json .CreatedAt}},"ID":{{json .ID}},"Image":{{json .Image}},"Labels":{{json .Labels}},"Names":{{json .Names}},"Networks":{{json .Networks}},"Ports":{{json .Ports}},"State":{{json .State}},"Status":{{json .Status}}}`;
+
 export function isDockerListContainerRecord(maybeContainer: unknown): maybeContainer is DockerListContainerRecord {
     const container = maybeContainer as DockerListContainerRecord;
 

@@ -107,7 +107,7 @@ import { withDockerAddHostArg } from './withDockerAddHostArg';
 import { withDockerBuildArg } from './withDockerBuildArg';
 import { withDockerEnvArg } from './withDockerEnvArg';
 import { withDockerBooleanFilterArg, withDockerFilterArg } from './withDockerFilterArg';
-import { withDockerJsonFormatArg } from "./withDockerJsonFormatArg";
+import { withDockerContainerJsonFormatArg, withDockerJsonFormatArg } from "./withDockerJsonFormatArg";
 import { withDockerLabelFilterArgs } from "./withDockerLabelFilterArgs";
 import { withDockerLabelsArg } from "./withDockerLabelsArg";
 import { withDockerMountsArg } from './withDockerMountsArg';
@@ -756,7 +756,7 @@ export abstract class DockerClientBase extends ConfigurableClient implements ICo
             withDockerFilterArg(options.volumes?.map((volume) => `volume=${volume}`)),
             withDockerFilterArg(options.networks?.map((network) => `network=${network}`)),
             withDockerNoTruncArg,
-            withDockerJsonFormatArg,
+            withDockerContainerJsonFormatArg,
         )();
     }
 

@@ -4,5 +4,8 @@
  *--------------------------------------------------------------------------------------------*/
 
 import { withNamedArg } from '../../utils/commandLineBuilder';
+import { DockerListContainerRecordFormat } from './DockerListContainerRecord';
 
 export const withDockerJsonFormatArg = withNamedArg('--format', '{{json .}}');
+
+export const withDockerContainerJsonFormatArg = withNamedArg('--format', DockerListContainerRecordFormat);
